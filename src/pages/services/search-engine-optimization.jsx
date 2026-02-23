@@ -1,0 +1,14 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+export default function SearchEngineOptimization() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-8">
+      <div className="max-w-3xl text-center">
+        <h1 className="text-4xl font-bold mb-4">Search Engine Optimization</h1>
+        <p className="text-gray-600 mb-6">Service: SEO</p>
+        <Link to="/services" className="text-blue-600">← Back to Services</Link>
+      </div>
+    </div>
+  );
+}
