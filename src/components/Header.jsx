@@ -96,12 +96,12 @@ const Header = () => {
                       <p className="text-gray-600 text-sm mb-6 leading-relaxed">
                         Tailored solutions to grow your business and achieve your goals.
                       </p>
-                      <Link 
-                        to="/services" 
+                      <Link
+                        to="/services"
                         className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 group"
                         onClick={() => setActive(null)}
                       >
-                        View all Services 
+                        View all Services
                         <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
                       </Link>
                     </div>
@@ -109,9 +109,9 @@ const Header = () => {
                     <div className="w-2/3 p-8 grid grid-cols-2 gap-6">
                       <div className="space-y-3">
                         {servicesLeft.map((item, i) => (
-                          <Link 
-                            key={i} 
-                            to={`/services/${slugify(item)}`} 
+                          <Link
+                            key={i}
+                            to={`/services/${slugify(item)}`}
                             className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                             onClick={() => setActive(null)}
                           >
@@ -121,9 +121,9 @@ const Header = () => {
                       </div>
                       <div className="space-y-3">
                         {servicesRight.map((item, i) => (
-                          <Link 
-                            key={i} 
-                            to={`/services/${slugify(item)}`} 
+                          <Link
+                            key={i}
+                            to={`/services/${slugify(item)}`}
                             className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                             onClick={() => setActive(null)}
                           >
@@ -165,7 +165,7 @@ const Header = () => {
               Company
             </Link>
 
-            {/* BLOG */}
+            {/* BLOG - Left Side Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setActive("blog")}
@@ -183,8 +183,21 @@ const Header = () => {
                     animate="show"
                     exit="exit"
                     transition={{ duration: 0.2 }}
-                    className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] rounded-2xl bg-white shadow-2xl border border-gray-100 flex overflow-hidden"
+                    className="absolute top-10 right-0 w-[600px] rounded-2xl bg-white shadow-2xl border border-gray-100 flex overflow-hidden"
                   >
+                    <div className="w-1/2 p-8 space-y-3">
+                      {blogItems.map((item, i) => (
+                        <Link
+                          key={i}
+                          to={`/blog/${slugify(item)}`}
+                          className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                          onClick={() => setActive(null)}
+                        >
+                          {item}
+                        </Link>
+                      ))}
+                    </div>
+
                     <div className="w-1/2 bg-gradient-to-br from-gray-50 to-gray-100 p-8">
                       <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Ninja Academy
@@ -193,25 +206,12 @@ const Header = () => {
                         Access in-depth guides, cutting-edge strategies and insider insights.
                       </p>
                     </div>
-
-                    <div className="w-1/2 p-8 space-y-3">
-                      {blogItems.map((item, i) => (
-                        <Link 
-                          key={i} 
-                          to={`/blog/${slugify(item)}`} 
-                          className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                          onClick={() => setActive(null)}
-                        >
-                          {item}
-                        </Link>
-                      ))}
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* COMPANY */}
+            {/* COMPANY - Left Side Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setActive("company")}
@@ -229,8 +229,21 @@ const Header = () => {
                     animate="show"
                     exit="exit"
                     transition={{ duration: 0.2 }}
-                    className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] rounded-2xl bg-white shadow-2xl border border-gray-100 flex overflow-hidden"
+                    className="absolute top-10 right-0 w-[700px] rounded-2xl bg-white shadow-2xl border border-gray-100 flex overflow-hidden"
                   >
+                    <div className="w-1/2 p-8 space-y-3">
+                      {companyItems.map((item, i) => (
+                        <Link
+                          key={i}
+                          to={`/company/${slugify(item)}`}
+                          className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                          onClick={() => setActive(null)}
+                        >
+                          {item}
+                        </Link>
+                      ))}
+                    </div>
+
                     <div className="w-1/2 bg-gradient-to-br from-gray-50 to-gray-100 p-8">
                       <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Company
@@ -238,19 +251,6 @@ const Header = () => {
                       <p className="text-gray-600 text-sm leading-relaxed">
                         Our strength lies in our people. We foster creativity and collaboration.
                       </p>
-                    </div>
-
-                    <div className="w-1/2 p-8 space-y-3">
-                      {companyItems.map((item, i) => (
-                        <Link 
-                          key={i} 
-                          to={`/company/${slugify(item)}`} 
-                          className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                          onClick={() => setActive(null)}
-                        >
-                          {item}
-                        </Link>
-                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -288,7 +288,7 @@ const Header = () => {
             className="lg:hidden bg-white border-t border-gray-200 mt-2 mx-4 sm:mx-6 rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="p-4 space-y-1">
-              
+
               {/* Mobile Services Section - expanded for mobile users */}
               <div className="border-b border-gray-100 pb-2">
                 <div className="px-4 py-3 text-gray-700 rounded-lg">

@@ -1,574 +1,669 @@
-import React from "react"
-import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
-import { ArrowRight, TrendingUp, Users, Target, Zap } from "../components/icons"
-import DigitalMarketingIllustration from "../components/DigitalMarketingIllustration"
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import Banner from "/images/team.png";
+
+
+/* =============================
+   ANIMATION SYSTEM
+============================= */
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: "easeOut" }
+  }
+};
+
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2
+    }
+  }
+};
+
+/* =============================
+   DATA
+============================= */
+
+const challengesData = [
+  {
+    title: "Marketing subscription confusion",
+    short: "I don't understand how it works.",
+    description:
+      "You get a full-stack team — SEO, PPC, design, strategy — under one monthly plan focused purely on results."
+  },
+  {
+    title: "Freelancers vs Agencies",
+    short: "Why switch to subscription?",
+    description:
+      "Subscription ensures one unified strategy, better cost efficiency, and full transparency."
+  },
+  {
+    title: "Past bad experience",
+    short: "It was slow and expensive.",
+    description:
+      "We deliver performance-driven execution backed by measurable KPIs."
+  },
+  {
+    title: "Lack of transparency",
+    short: "I don't know what I'm paying for.",
+    description:
+      "You get clear dashboards, weekly calls, and measurable reporting."
+  },
+  {
+    title: "Disconnected marketing",
+    short: "SEO, ads, content feel separate.",
+    description:
+      "We align all channels under one strategic framework."
+  },
+  {
+    title: "Need flexibility",
+    short: "What if priorities change?",
+    description:
+      "Shift priorities anytime. No lock-in contracts."
+  }
+];
+const benefits = [
+  {
+    title: "Full Coverage",
+    subtitle: "Every channel, one team",
+    color: "text-blue-400",
+    description:
+      "Instead of managing separate agencies for SEO, PPC, content, and design, you get a unified team that collaborates internally. Everyone works toward your business results — not isolated KPIs — so strategy, execution, and outcomes stay fully connected."
+  },
+  {
+    title: "Unified Strategy",
+    subtitle: "No more disconnected efforts.",
+    color: "text-purple-400",
+    description:
+      "We build a single, cohesive plan across channels — so your campaigns support each other, your messaging stays consistent, and every move drives toward one business outcome."
+  },
+  {
+    title: "Clarity & Control",
+    subtitle: "You always know what's happening — and why.",
+    color: "text-pink-400",
+    description:
+      "Clear reporting, transparent communication, and measurable performance. You’re never left wondering where your budget went."
+  },
+  {
+    title: "Time Efficiency",
+    subtitle: "You get a team — without managing one.",
+    color: "text-orange-400",
+    description:
+      "No hiring. No onboarding. No coordination chaos. Just a ready-to-perform team aligned to your business goals."
+  }
+];
+const services = [
+  {
+    title: "SEO Optimization",
+    desc: "Increase rankings and organic traffic."
+  },
+  {
+    title: "Performance Marketing",
+    desc: "High-converting paid campaigns."
+  },
+  {
+    title: "Social Media Growth",
+    desc: "Brand visibility & engagement."
+  },
+  {
+    title: "Web Development",
+    desc: "High-performance websites."
+  }
+];
+const steps = [
+  {
+    number: "01",
+    title: "Meet Your Marketing Expert",
+    description:
+      "A single point of contact — fully aligned with your business. You’ll be matched with a dedicated strategist who understands your industry, goals, and challenges. They lead your roadmap, brief the team, and make sure everything runs toward real outcomes."
+  },
+  {
+    number: "02",
+    title: "Build a Custom Plan",
+    description:
+      "A flexible monthly strategy — built around your goals. Together, we prioritize tasks, channels, and focus areas. You get a curated team of SEO, PPC, content, and design pros working under one integrated strategy."
+  },
+  {
+    number: "03",
+    title: "Custom Strategy",
+    description:
+      "We design a data-driven plan tailored to scale. Based on your goals and audit findings, we build a high-performance roadmap to drive fast results and set you up for long-term impact."
+  },
+  {
+    number: "04",
+    title: "Activate Your Hours",
+    description:
+      "Use your time where it drives the most impact. Every month, your bank of hours turns into deliverables: campaigns, creatives, content, audits, and optimizations. Need a push on one channel? We shift instantly."
+  },
+  {
+    number: "05",
+    title: "Focus on Results",
+    description:
+      "We show exactly what’s working — and why. You get clear, ongoing reports tied to your business goals — not vanity metrics. Every campaign adjustment is tracked, explained, and optimized in real time."
+  }
+];
+/* =============================
+   COMPONENT
+============================= */
 
 const Home = () => {
-  const features = [
-    {
-      icon: <TrendingUp className="w-8 h-8" />,
-      title: "SEO Optimization",
-      description: "Boost your search rankings and drive organic traffic to your website.",
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "Social Media Marketing",
-      description: "Engage your audience and build brand presence across all platforms.",
-    },
-    {
-      icon: <Target className="w-8 h-8" />,
-      title: "PPC Advertising",
-      description: "Maximize ROI with targeted ad campaigns that convert visitors into customers.",
-    },
-    {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Brand Strategy",
-      description: "Create compelling brand stories that resonate with your target audience.",
-    },
-  ]
+  const [flippedIndex, setFlippedIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const handleFlip = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+  const [index, setIndex] = useState(0);
+  const navigate = useNavigate();
 
-  const stats = [
-    { number: "500+", label: "Happy Clients", emoji: "😊" },
-    { number: "1000+", label: "Projects Completed", emoji: "✅" },
-    { number: "95%", label: "Client Retention", emoji: "📈" },
-    { number: "24/7", label: "Support", emoji: "🕐" },
-  ]
+  // Auto Slide
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % services.length);
+    }, 4000);
 
-  const socialPlatforms = [
-    { name: "Instagram", emoji: "📷", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
-    { name: "Facebook", emoji: "👥", color: "bg-blue-600" },
-    { name: "Twitter", emoji: "🐦", color: "bg-sky-500" },
-    { name: "YouTube", emoji: "▶️", color: "bg-red-600" },
-    { name: "TikTok", emoji: "🎵", color: "bg-black" },
-    { name: "LinkedIn", emoji: "💼", color: "bg-blue-700" },
-  ]
+    return () => clearInterval(interval);
+  }, []);
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Marketing Director",
-      company: "TechStart",
-      content: "Their social media strategy increased our engagement by 300% in just 3 months!",
-      avatar: "👩‍💼",
-      rating: 5,
-    },
-    {
-      name: "Michael Chen",
-      role: "CEO",
-      company: "GrowthLabs",
-      content: "The best digital marketing agency we've worked with. Highly recommended!",
-      avatar: "👨‍💼",
-      rating: 5,
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "Brand Manager",
-      company: "FashionHub",
-      content: "Our Instagram followers grew from 10k to 100k in 6 months. Amazing work!",
-      avatar: "👩‍🎨",
-      rating: 5,
-    },
-  ]
+  const nextSlide = () => {
+    setIndex((prev) => (prev + 1) % services.length);
+  };
 
-  const metrics = [
-    { label: "Social Engagement", value: "85%", emoji: "❤️", color: "text-pink-500" },
-    { label: "Website Traffic", value: "200%", emoji: "👁️", color: "text-blue-500" },
-    { label: "Conversion Rate", value: "45%", emoji: "🎯", color: "text-green-500" },
-    { label: "ROI", value: "300%", emoji: "📊", color: "text-purple-500" },
-  ]
+  const prevSlide = () => {
+    setIndex((prev) =>
+      prev === 0 ? services.length - 1 : prev - 1
+    );
+  };
 
-  const food = [
-    ["🍅", 340, 10],
-    ["🍊", 20, 40],
-    ["🍋", 60, 90],
-    ["🍐", 80, 120],
-    ["🍏", 100, 140],
-    ["🫐", 205, 245],
-    ["🍆", 260, 290],
-    ["🍇", 290, 320],
-  ]
-
-  const containerStyle = {
-    margin: "0 auto",
-    maxWidth: 500,
-    paddingBottom: 100,
-    width: "100%",
-  }
 
 
 
   return (
-    <div className="pt-20 overflow-hidden">
-      {/* HERO SECTION WITH HYPERSPEED BACKGROUND */}
-      <section className="relative bg-black text-white min-h-screen overflow-hidden">
+    <div className="bg-black text-white overflow-hidden">
 
-        <div className="max-w-7xl mx-auto px-8 pt-36 pb-24 grid lg:grid-cols-2 gap-16 items-center">
+      {/* ================= HERO SECTION ================= */}
+
+      <section className="min-h-screen flex items-center px-6">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center pt-24">
 
           {/* LEFT CONTENT */}
-          <div>
-
-            {/* Heading */}
-            <h1 className="font-semibold leading-[1.05] tracking-tight text-[42px] md:text-[64px] lg:text-[72px]">
-              <span className="text-white">
-                All your marketing <br />
-                needs
-              </span>{" "}
-              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                in one single <br />
-                monthly subscription
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+          >
+            <h1 className="text-5xl md:text-6xl font-semibold leading-tight">
+              All your marketing needs{" "}
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                in one single monthly subscription
               </span>
             </h1>
 
-            {/* Paragraph */}
-            <p className="mt-8 text-gray-400 text-[17px] md:text-[19px] leading-relaxed max-w-xl">
-              Crystal-clear hourly billing and hundreds of marketing and creative
-              experts at your disposal. That's what you get when you sign up for
-              NinjaPromo's all-in-one marketing service.
+            <p className="mt-8 text-gray-400 text-lg">
+              Crystal-clear billing. Full creative team. Measurable results.
             </p>
 
-            {/* Button + Side Text */}
-            <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-6">
+            <button className="mt-10 px-10 py-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 font-semibold hover:scale-105 transition-all">
+              Book a Demo
+            </button>
+          </motion.div>
 
-              <button className="px-8 py-4 rounded-full text-lg font-medium 
-          bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
-          hover:opacity-90 transition duration-300">
-                Book a demo
-              </button>
-
-              <p className="text-gray-400 text-sm max-w-xs">
-                Design, develop, create ads, and more within one handy marketing subscription.
-              </p>
-
-            </div>
-
-          </div>
-
-          {/* RIGHT CONTENT */}
-          <div className="flex justify-center lg:justify-end gap-6">
-
-            {/* Left Image Card */}
-            <div className="flex flex-col items-center">
+          {/* RIGHT IMAGE */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.3 }}
+            className="relative"
+          >
+            <div className="rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="/image1.jpg"   // replace with your first image
-                alt="Seamless Dubai"
-                className="w-[240px] md:w-[260px] rounded-2xl"
+                src="https://images.unsplash.com/photo-1557804506-669a67965ba0"
+                alt="Marketing Team"
+                className="w-full h-[500px] object-cover"
               />
-              <p className="mt-4 text-gray-300 text-sm">
-                Seamless <span className="text-gray-500">📍 Dubai</span>
-              </p>
             </div>
+          </motion.div>
 
-            {/* Right Column */}
-            <div className="flex flex-col gap-6">
-
-              {/* Rating Card */}
-              <div className="bg-zinc-800 rounded-2xl px-6 py-5 w-[240px] flex items-center gap-4">
-                <div className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center font-bold">
-                  C
-                </div>
-                <div>
-                  <p className="text-white font-semibold">4.9+ ⭐</p>
-                  <p className="text-gray-400 text-sm">rating on Clutch</p>
-                </div>
-              </div>
-
-              {/* Second Image */}
-              <div className="flex flex-col items-center">
-                <img
-                  src="/images/Home/hero-services.svg"  // replace with your second image
-                  alt="Gitex Dubai"
-                  className="w-[240px] md:w-[260px] rounded-2xl"
-                />
-                <p className="mt-4 text-gray-300 text-sm">
-                  Gitex <span className="text-gray-500">📍 Dubai</span>
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Bottom Trusted Line */}
-        <div className="absolute bottom-8 w-full text-center text-gray-400 text-sm">
-          Trusted by <span className="text-white font-semibold">250+</span> startups and global brands, across 30+ industries.
-        </div>
-
-      </section>
-
-      {/* STATS SECTION */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="text-center text-white"
-              >
-                <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-                  className="inline-block mb-2 text-3xl"
-                >
-                  {stat.emoji}
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  className="text-4xl font-bold mb-2"
-                >
-                  {stat.number}
-                </motion.div>
-                <div className="text-blue-100">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
+      {/* ================= CHALLENGES SECTION ================= */}
+
+      <section className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+
+          {/* HEADING */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center max-w-4xl mx-auto mb-20"
           >
-            <h2 className="text-4xl font-bold mb-4">Our Core Services</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Comprehensive digital marketing solutions tailored to your business needs
+            <h2 className="text-5xl font-semibold mb-6">
+              Challenges Our Clients Faced
+              <br />
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Before Working With Us
+              </span>
+            </h2>
+
+            <p className="text-gray-400 text-lg">
+              Hover to flip and see the full details.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{
-                  y: -10,
-                  boxShadow: "0 20px 30px -10px rgba(0,0,0,0.2)"
-                }}
-                className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 group"
-              >
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform"
-                >
-                  {feature.icon}
-                </motion.div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SOCIAL MEDIA PLATFORMS */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6">
+          {/* FLIP CARDS GRID */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-10"
           >
-            <h2 className="text-4xl font-bold mb-4">We Dominate Every Platform</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              From Instagram to LinkedIn, we've got your social media covered
-            </p>
-          </motion.div>
+            {challengesData.map((item, index) => {
+              const isFlipped = flippedIndex === index;
 
-          <div className="flex flex-wrap justify-center gap-6">
-            {socialPlatforms.map((platform, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 10
-                }}
-                whileHover={{
-                  y: -20,
-                  scale: 1.1,
-                }}
-                className={`${platform.color} text-white p-6 rounded-xl shadow-lg cursor-pointer`}
-              >
-                <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-                  className="text-4xl"
-                >
-                  {platform.emoji}
-                </motion.div>
-                <p className="mt-2 font-semibold">{platform.name}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* TESTIMONIALS SECTION */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Don't just take our word for it - hear from our satisfied clients
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index === 1 ? 0 : index === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white p-6 rounded-xl shadow-lg relative"
-              >
-                <motion.div
-                  animate={{
-                    y: [0, -10, 0],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                  className="text-5xl mb-4"
-                >
-                  {testimonial.avatar}
-                </motion.div>
-
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <motion.span
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="text-yellow-400"
-                    >
-                      ★
-                    </motion.span>
-                  ))}
-                </div>
-
-                <p className="text-gray-600 mb-4">"{testimonial.content}"</p>
-
-                <div>
-                  <p className="font-semibold">{testimonial.name}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role} at {testimonial.company}</p>
-                </div>
-
-                <motion.div
-                  animate={{
-                    rotate: [0, 360],
-                  }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute -top-2 -right-2 w-12 h-12 bg-blue-100 rounded-full -z-10"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* METRICS SECTION */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl font-bold mb-6">Our Results Speak for Themselves</h2>
-              <p className="text-gray-600 mb-8">
-                We don't just promise results - we deliver them. Here's what we've achieved for our clients.
-              </p>
-
-              {metrics.map((metric, index) => (
-                <motion.div
+              return (
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="mb-6"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{metric.emoji}</span>
-                    <span className="font-semibold">{metric.label}</span>
-                    <span className="ml-auto font-bold">{metric.value}</span>
-                  </div>
-                  <motion.div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: metric.value }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: index * 0.2 }}
-                      className={`h-full rounded-full ${index === 0 ? "bg-pink-500" :
-                        index === 1 ? "bg-blue-500" :
-                          index === 2 ? "bg-green-500" : "bg-purple-500"
-                        }`}
-                    />
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 gap-6"
-            >
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="bg-white p-6 rounded-xl shadow-lg text-center"
+                  className="perspective"
+                  onMouseEnter={() => setFlippedIndex(index)}
+                  onMouseLeave={() => setFlippedIndex(null)}
                 >
                   <motion.div
-                    animate={{
-                      scale: [1, 1.2, 1],
+                    animate={{ rotateY: isFlipped ? 180 : 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="relative w-full h-72 transition-transform duration-700"
+                    style={{
+                      transformStyle: "preserve-3d"
                     }}
-                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                    className="text-4xl mb-2"
                   >
-                    {stat.emoji}
+                    {/* FRONT */}
+                    <div
+                      className="absolute inset-0 bg-zinc-900 border border-zinc-800 rounded-2xl p-8"
+                      style={{ backfaceVisibility: "hidden" }}
+                    >
+                      <div className="text-4xl text-zinc-600 mb-6">“</div>
+                      <h3 className="text-lg font-semibold mb-4">
+                        {item.short}
+                      </h3>
+                      <p className="text-gray-400 text-sm">
+                        {item.title}
+                      </p>
+                    </div>
+
+                    {/* BACK */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-8 text-white"
+                      style={{
+                        transform: "rotateY(180deg)",
+                        backfaceVisibility: "hidden"
+                      }}
+                    >
+                      <h3 className="text-lg font-semibold mb-4">
+                        Solution
+                      </h3>
+                      <p className="text-sm leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
                   </motion.div>
-                  <div className="text-2xl font-bold">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                </motion.div>
-              ))}
-            </motion.div>
+                </div>
+              );
+            })}
+          </motion.div>
+
+        </div>
+      </section>
+      <section className="bg-black text-white py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+
+          {/* ================= HEADING ================= */}
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="text-center mb-24"
+          >
+            <h2 className="text-5xl md:text-6xl font-semibold leading-tight">
+              Why Subscription-Based Digital
+              <br />
+              Marketing Works Better
+              <br />
+              Than Traditional Agencies?
+            </h2>
+          </motion.div>
+
+          {/* ================= 4 COLUMN GRID ================= */}
+
+          <div className="grid md:grid-cols-4 border-l border-zinc-800">
+
+            {benefits.map((item, index) => {
+              const isActive = activeIndex === index;
+
+              return (
+                <div
+                  key={index}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(null)}
+                  className="relative border-r border-zinc-800 px-8 py-20 min-h-[420px] cursor-pointer transition-all duration-500"
+                >
+                  {/* TITLE */}
+                  <motion.h3
+                    animate={{ y: isActive ? -10 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-2xl font-semibold mb-4"
+                  >
+                    {item.title}
+                  </motion.h3>
+
+                  {/* SUBTITLE */}
+                  <p className={`mb-6 font-medium ${item.color}`}>
+                    {item.subtitle}
+                  </p>
+
+                  {/* QUOTE ICON */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isActive ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-4xl text-zinc-600 mb-4"
+                  >
+                    “
+                  </motion.div>
+
+                  {/* DESCRIPTION */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      opacity: isActive ? 1 : 0,
+                      y: isActive ? 0 : 20
+                    }}
+                    transition={{ duration: 0.4 }}
+                    className="text-gray-400 text-sm leading-relaxed"
+                  >
+                    {item.description}
+                  </motion.div>
+
+                  {/* HOVER GLOW EFFECT */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    animate={{
+                      background: isActive
+                        ? "linear-gradient(180deg, rgba(255,255,255,0.05), transparent)"
+                        : "transparent"
+                    }}
+                    transition={{ duration: 0.4 }}
+                  />
+                </div>
+              );
+            })}
+
           </div>
         </div>
       </section>
 
-      {/* ANIMATED CARDS SECTION */}
 
 
-      {/* CTA SECTION */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-        <motion.div
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0.1, 0.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          className="absolute bg-white rounded-full"
-          style={{ width: "200%", height: "200%", left: "-50%", top: "-50%" }}
-        />
+      <section className="w-full bg-black text-white py-20">
+        <div className="max-w-6xl mx-auto text-center mb-16 px-6">
+          <h2 className="text-4xl md:text-5xl font-semibold mb-6">
+            Your Full Subscription-Based Team
+          </h2>
 
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Ready to Transform Your Digital Presence?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Let's discuss how we can help you achieve your marketing goals and drive real business results.
-            </p>
-            <Link
-              to="/contact"
-              className="group relative inline-block bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg overflow-hidden"
-            >
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
+          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+            An estimated schedule of specialists' working hours under the
+            $12,800/month rate is outlined
+          </p>
+        </div>
+
+        {/* Full Width Image */}
+        <div className="w-full">
+          <img
+            src={Banner}
+            alt="Full Width Banner"
+            className="w-full h-auto object-cover"
+          />
+        </div>
+      </section>
+      <section className="bg-black text-white py-24 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+
+          <h2 className="text-4xl font-semibold mb-16">
+            Our Services
+          </h2>
+
+          <div className="relative h-64 flex items-center justify-center">
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
                 transition={{ duration: 0.5 }}
-              />
-              <span className="relative z-10">Get Free Consultation</span>
-            </Link>
+                className="absolute w-full max-w-md bg-zinc-900 rounded-2xl p-10 border border-zinc-800"
+              >
+                <h3 className="text-2xl font-semibold mb-4">
+                  {services[index].title}
+                </h3>
+                <p className="text-gray-400">
+                  {services[index].desc}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+          </div>
+
+          {/* ARROWS */}
+          <div className="flex justify-center gap-6 mt-10">
+            <button
+              onClick={prevSlide}
+              className="w-10 h-10 border border-zinc-700 rounded-full flex items-center justify-center hover:bg-zinc-800 transition"
+            >
+              ←
+            </button>
+
+            <button
+              onClick={nextSlide}
+              className="w-10 h-10 border border-zinc-700 rounded-full flex items-center justify-center hover:bg-zinc-800 transition"
+            >
+              →
+            </button>
+          </div>
+
+          {/* VIEW ALL BUTTON */}
+          <div className="mt-12">
+            <button
+              onClick={() => navigate("/services")}
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-medium hover:scale-105 transition"
+            >
+              View All Services
+            </button>
+          </div>
+
+        </div>
+      </section>
+      <section className="bg-black text-white py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+
+          {/* ================= HEADING ================= */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-semibold leading-tight mb-6">
+              Our Subscription-Based Digital Workflow —
+              <br />
+              Strategy That Scales, Built to Maximize ROI at Every Stage
+            </h2>
+
+            <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+              One Process. Every Channel. Fully Managed. We don’t just manage tasks —
+              we run your entire digital engine. Our subscription brings together
+              strategy, execution, and analytics under one system — built to
+              eliminate chaos and drive real results.
+            </p>
           </motion.div>
+
+          {/* ================= STEPS ================= */}
+          <div className="space-y-16">
+
+            {steps.map((step, index) => (
+              <div key={index} className="border-t border-zinc-800 pt-12">
+
+                <div className="grid md:grid-cols-3 gap-10 items-start">
+
+                  {/* NUMBER */}
+                  <div className="text-zinc-500 text-xl font-light">
+                    {step.number}
+                  </div>
+
+                  {/* TITLE + ICON */}
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-full border border-blue-500 flex items-center justify-center text-blue-400">
+                      ●
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-semibold">
+                      {step.title}
+                    </h3>
+                  </div>
+
+                  {/* DESCRIPTION */}
+                  <div className="text-gray-400 leading-relaxed text-sm md:text-base">
+                    {step.description}
+                  </div>
+
+                </div>
+              </div>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+      <section className="bg-black text-white py-28 px-6">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-start">
+
+          {/* LEFT CONTENT */}
+          <div>
+            <h2 className="text-4xl md:text-5xl font-semibold leading-tight mb-10">
+              Ready to grow your business with iClapss?
+            </h2>
+
+            <p className="text-gray-300 mb-8 font-medium">
+              Let’s discuss how we can help you scale with:
+            </p>
+
+            <ul className="space-y-4 text-gray-400 text-lg">
+              <li>• Social Media Marketing & Brand Growth</li>
+              <li>• Full-Service Digital Marketing Strategy</li>
+              <li>• Performance Marketing (Google & Meta Ads)</li>
+              <li>• SEO Optimization & Organic Traffic Scaling</li>
+              <li>• Website Development & Conversion Optimization</li>
+              <li>• Content Writing & Creative Production</li>
+              <li>• Funnel Building & Lead Generation</li>
+              <li>• Analytics, Tracking & ROI Optimization</li>
+            </ul>
+
+            <p className="text-gray-500 mt-10 text-sm">
+              iClapss delivers a unified marketing system — strategy, execution,
+              and measurable results under one powerful subscription.
+            </p>
+          </div>
+
+          {/* RIGHT FORM */}
+          <div className="bg-white rounded-3xl p-10 text-black shadow-2xl">
+            <h3 className="text-2xl font-semibold mb-8">
+              Book a strategy call with iClapss
+            </h3>
+
+            <form className="space-y-6">
+
+              <div>
+                <label className="text-sm text-gray-600">
+                  First Name*
+                </label>
+                <input
+                  type="text"
+                  className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-600">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-600">
+                  Work Email*
+                </label>
+                <input
+                  type="email"
+                  className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-600">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="+91"
+                  className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-600">
+                  What services are you interested in?
+                </label>
+                <textarea
+                  rows="3"
+                  placeholder="SEO, Ads, Website Development, Social Media..."
+                  className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2 resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:scale-105 transition"
+              >
+                Book a Free Consultation
+              </button>
+
+              <p className="text-xs text-gray-500 mt-4">
+                By submitting this form, you agree to receive communication from iClapss regarding your inquiry.
+              </p>
+
+            </form>
+          </div>
+
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-// Card Component
-const Card = ({ emoji, hueA, hueB }) => {
-  const cardContainerStyle = {
-    overflow: "hidden",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-    paddingTop: 20,
-    marginBottom: -120,
-  }
-
-  const splashStyle = {
-    position: "absolute",
-    inset: 0,
-    background: `linear-gradient(306deg, hsl(${hueA}, 100%, 50%), hsl(${hueB}, 100%, 50%))`,
-    borderRadius: "20px",
-  }
-
-  const cardStyle = {
-    fontSize: 164,
-    width: 300,
-    height: 430,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    background: "#f5f5f5",
-    position: "relative",
-    zIndex: 1,
-  }
-
-  return (
-    <motion.div
-      style={cardContainerStyle}
-      initial={{ y: 200 }}
-      whileInView={{ y: 0, rotate: -5 }}
-      transition={{ type: "spring", bounce: 0.4, duration: 0.8 }}
-      viewport={{ amount: 0.5 }}
-    >
-      <div style={splashStyle} />
-      <motion.div style={cardStyle}>
-        {emoji}
-      </motion.div>
-    </motion.div>
-  )
-}
-
-export default Home
+export default Home;

@@ -95,7 +95,7 @@ function App() {
             <Route path="/company/careers" element={<Careers />} />
             <Route path="/company/events" element={<Events />} />
             <Route path="/company/contacts" element={<Contacts />} />
-           
+
           </Routes>
         </main>
         <Footer />
